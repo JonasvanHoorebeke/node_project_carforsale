@@ -1,0 +1,23 @@
+<h1>Acheter un véhicule</h1>
+<a href='/form'>Cliquez ici si vous souhaitez vendre votre véhicule</a>
+
+<table>
+    <tr>
+        <td>Marque</td>
+        <td>Modèle</td>
+        <td>Prix</td>
+
+    </tr>    
+    <% acheter.forEach(function(item) { %>
+    <tr>
+        <td><%= item.marque %></td>
+        <td><%= item.modele %></td>
+        <td><%= item.prix %></td>
+        <td>
+            <a href="/delete?id=<%= item.id %>" onclick="return confirm('Êtes vous certain de vouloir supprimer cette annonce ?')">Supprimer</a>
+            <a href="/edit?id=<%= item.id %>">Modifier</a>
+        </td>
+    </tr>    
+    <% }); %>
+</table>
+
