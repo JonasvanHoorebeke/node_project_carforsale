@@ -82,13 +82,6 @@ router.get('/detail', function(req, res, next) {
 });
 
 /* API = permet qu'un élément d'un logiciel parle à une autre élément */
-/* Test API */
-/* app.get('/api', (req, res) => {
-  res.json({
-    success: 1,
-    message: "This is rest apis working"
-  });
-}); */
 
 /* GET API all annonces */
 router.get('/api', (req, res, next) => {
@@ -111,15 +104,7 @@ router.get('/api/:id', (req, res, next) => {
   })
 });
 
-/* DELETE API annonce */
-router.delete('/api/:id', (req, res, next) => {
-  db.query('DELETE FROM tb_annonce WHERE id = ?', [req.params.id],(err, rows, fields) => {
-    if(!err)
-    res.send('Deleted successfully');
-    else
-    console.log(err)
-  })
-});
+
 
 /*UPDATE API annonce*/
 /* router.put('/api', (req, res, next) => {
@@ -134,20 +119,49 @@ router.delete('/api/:id', (req, res, next) => {
   })
 }); */
 
-/*ADD API annonce*/
-/* app.post('/adduser', function (req, res) {
+/*POST API add annonce*/
+router.post('/adduser', function (req, res) {
   
-  let id = req.body.id;
   let marque = req.body.marque;
-console.log(id+" "+marque);
-  if (!id && !marque) {
+  let modele = req.body.modele;
+  let annee = req.body.annee;
+  let kilometrage = req.body.kilometrage;
+  let prix = req.body.prix;
+console.log(marque+" "+modele+" "+annee+" "+kilometrage+" "+prix);
+  if (!marque && !modele && !annee && !kilometrage && !prix) {
       return res.status(400).send({ error:true, message: 'Please provide Information to be add' });
   }
 
-  db.query("INSERT INTO tb_annonce(id, marque) value(?,?) ", [id,marque], function (error, results, fields) {
+  db.query("INSERT INTO tb_annonce(marque, modele, annee) value(?,?,?) ", [marque,modele,annee], function (error, results, fields) {
       if (error) throw error;
-      return res.send({ error: false, data: results, message: 'Record has been added' });
+      return res.send({ error: false, data: results, message: 'Record added successfully' });
   });
-}); */
+});
+
+/* DELETE API annonce */
+router.delete('/api/:id', (req, res, next) => {
+  db.query('DELETE FROM tb_annonce WHERE id = ?', [req.params.id],(err, rows, fields) => {
+    if(!err)
+    res.send('Deleted successfully');
+    else
+    console.log(err)
+  })
+});
+
+/* PUT API update annonce */
+router.put('/update', function (req, res) {
+  
+    let id = req.body.id;
+    let marque = req.body.marque;
+    let modele = req.body.modele;
+    if (!id || !marque || !modele) {
+        return res.status(400).send({ error: user, message: 'Please provide full information with id' });
+    }
+  
+    db.query("UPDATE tb_annonce SET marque = ?, modele = ? WHERE id = ?", [marque, modele, id], function (error, results, fields) {
+        if (error) throw error;
+        return res.send({ error: false, data: results, message: 'Updated successfully' });
+    });
+});
 
 module.exports = router;
