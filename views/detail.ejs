@@ -8,13 +8,13 @@
         <td>Prix</td>
 
     </tr>    
-    <% detail(item)  %>
+    <% detail.forEach(function(item) { %>
     <tr>
         <td><%= item.marque %></td>
         <td><%= item.modele %></td>
         <td><%= item.prix %></td>
         <td>
     </tr>    
-    <%  %>
+    <% }); %>
 </table>
 </body>

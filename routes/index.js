@@ -9,10 +9,9 @@ var db = mysql.createConnection({
   database: 'db_carforsale',
   debug: false
 });
-/* app.use(bodyParser.urlencoded({
-  extended: true
-}));
-app.use(bodyParser.json()); */
+
+
+/* ROUTES MVC */
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -35,19 +34,19 @@ router.get('/acheter', function(req, res, next){
   });
 });
 
-/* AFFICHER UNE ANNONCE EN PARTICULIER */
+/* GET generate specific annonce */
  router.get('/detail', function(req, res, next){
   db.query('SELECT FROM tb_annonce WHERE id = ?', function(err, rs) {
     res.render('detail', {acheter: rs}); // res.render = génère un modèle de vue
   });
 });
 
-/* GET form new annonce */
+/* GET form for new annonce */
 router.get('/form', function(req, res, next){
   res.render('form', { acheter: {} }); // ?
 });
 
-/* POST form new annonce */
+/* POST form for new annonce */
 router.post('/form', function(req, res, next){
   db.query('INSERT INTO tb_annonce SET ?', req.body, function(err, rs){
     res.render('new');
@@ -79,17 +78,11 @@ router.post('/edit', function(req, res, next) {
   })
 })
 
-/* GET update annonce */
-/* router.get('/detail', function(req, res, next) {
-  db.query('SELECT * FROM tb_annonce WHERE id = ?', req.query.id, function(err, rs){
-    res.render('form', {acheter: rs[0]});
-  })
-}); */
 
-/* API = permet qu'un élément d'un logiciel parle à une autre élément */
+/* ROUTES API */
 
-/* GET API all annonces */
-router.get('/api', (req, res, next) => {
+/* GET API generate all annonces */
+router.get('/api/all', (req, res, next) => {
   db.query('SELECT * FROM tb_annonce', (err, rows, fields) => {
     if(!err)
     res.send(rows);
@@ -99,7 +92,7 @@ router.get('/api', (req, res, next) => {
 });
 
 
-/* GET API one annonce */
+/* GET API generate specific annonce */
 router.get('/api/:id', (req, res, next) => {
   db.query('SELECT * FROM tb_annonce WHERE id = ?', [req.params.id],(err, rows, fields) => {
     if(!err)
@@ -109,25 +102,9 @@ router.get('/api/:id', (req, res, next) => {
   })
 });
 
-
-
-/*UPDATE API annonce*/
-/* router.put('/api', (req, res, next) => {
-  let emp = req.body;
-  var sql = 'SET @id = ?;SET @marque = ?;SET @modele = ?;SET @annee = ?;SET @kilometrage = ?;SET @prix; \
-  CALL UserAddOrEdit(@id,@marque,@modele,@annee,@kilometrage,@prix);';
-  db.query(sql, [emp.id, emp.marque, emp.modele, emp.annee, emp.kilometrage, emp.prix], (err, rows, fields) => {
-    if(!err)
-    res.send('Updated successfully');
-    else
-    console.log(err)
-  })
-}); */
-
-/*POST API add annonce*/
-router.post('/adduser', function (req, res) {
-  
-  let marque = req.body.marque;
+/*POST API add new annonce*/
+router.post('/api/add', function (req, res) { 
+  let marque = req.body.marque; 
   let modele = req.body.modele;
   let annee = req.body.annee;
   let kilometrage = req.body.kilometrage;
@@ -136,20 +113,15 @@ console.log(marque+" "+modele+" "+annee+" "+kilometrage+" "+prix);
   if (!marque && !modele && !annee && !kilometrage && !prix) {
       return res.status(400).send({ error:true, message: 'Please provide Information to be add' });
   }
-
-  db.query("INSERT INTO tb_annonce(marque, modele, annee) value(?,?,?) ", [marque,modele,annee], function (error, results, fields) {
+  db.query("INSERT INTO tb_annonce(marque, modele, annee, kilometrage, prix) value(?,?,?,?,?) ", [marque,modele,annee,kilometrage,prix], function (error, results, fields) {
       if (error) throw error;
       return res.send({ error: false, data: results, message: 'Record added successfully' });
   });
 });
 
 /* DELETE API annonce */
-
-
-router.delete('/deleteuser', function (req, res) {
-  
+router.delete('/api/delete', function (req, res) {
   let id = req.body.id;
-
   if (!id) {
       return res.status(400).send({ error: true, message: 'Please provide id' });
   }
@@ -161,15 +133,17 @@ router.delete('/deleteuser', function (req, res) {
 
 /* PUT API update annonce */
 router.put('/update', function (req, res) {
-  
     let id = req.body.id;
     let marque = req.body.marque;
     let modele = req.body.modele;
-    if (!id || !marque || !modele) {
+    let annee = req.body.annee;
+    let kilometrage = req.body.kilometrage;
+    let prix = req.body.prix;
+
+    if (!id || !marque || !modele || !annee || !kilometrage || !prix) {
         return res.status(400).send({ error: user, message: 'Please provide full information with id' });
     }
-  
-    db.query("UPDATE tb_annonce SET marque = ?, modele = ? WHERE id = ?", [marque, modele, id], function (error, results, fields) {
+    db.query("UPDATE tb_annonce SET marque = ?, modele = ?, annee = ?, kilometrage = ?, prix = ? WHERE id = ?", [marque, modele, annee, kilometrage, prix, id], function (error, results, fields) {
         if (error) throw error;
         return res.send({ error: false, data: results, message: 'Updated successfully' });
     });
