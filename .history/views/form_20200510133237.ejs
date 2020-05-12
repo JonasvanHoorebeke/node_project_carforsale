@@ -1,0 +1,9 @@
+<form method='post'>
+    <div>Marque<input name='marque' value="<%= acheter.marque %>" /></div>
+    <div>Modèle<input name='modele' value="<%= acheter.modele %>" /></div>
+    <div>Année<input name='annee' value="<%= acheter.annee %>" /></div>
+    <div>Kilométrage<input name='kilometrage' value="<%= acheter.kilometrage %>" /></div>
+    <div>Prix<input name='prix' value="<%= acheter.prix %>" /></div>
+    <button>Save</button>
+    <input type="hidden" value="%= acheter.id %>"/>
+</form>

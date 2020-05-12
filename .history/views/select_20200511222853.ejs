@@ -1,0 +1,37 @@
+<head>
+    
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+       
+    <!-- Mon CSS -->
+    <link rel="stylesheet" href="style.css"/>
+    <title>Emakina - Agence digitale</title>
+  </head>
+  
+<h1>Acheter un véhicule</h1>
+<a href='/form'>Cliquez ici si vous souhaitez vendre votre véhicule</a>
+
+<table>
+    <tr>
+        <td>Marque</td>
+        <td>Modèle</td>
+        <td>Prix</td>
+
+    </tr>    
+    <% acheter.forEach(function(item) { %>
+    <tr>
+        <td><%= item.marque %></td>
+        <td><%= item.modele %></td>
+        <td><%= item.prix %></td>
+        <td>
+            <a href="/delete?id=<%= item.id %>" onclick="return confirm('Êtes vous certain de vouloir supprimer cette annonce ?')">Supprimer</a>
+            <a href="/edit?id=<%= item.id %>">Modifier</a>
+        </td>
+    </tr>    
+    <% }); %>
+</table>
+

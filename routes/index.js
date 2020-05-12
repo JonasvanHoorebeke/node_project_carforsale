@@ -9,6 +9,10 @@ var db = mysql.createConnection({
   database: 'db_carforsale',
   debug: false
 });
+/* app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json()); */
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -24,12 +28,14 @@ router.get('/testconnect', function(req, res, next){
   }
 });
 
-/* GET generate display of annonces */
+/* GET generate list of annonces */
 router.get('/acheter', function(req, res, next){
   db.query('SELECT * FROM tb_annonce', function(err, rs) {
     res.render('select', {acheter: rs}); // res.render = génère un modèle de vue
   });
 });
+
+/* AFFICHER UNE ANNONCE EN PARTICULIER */
 
 /* GET form new annonce */
 router.get('/form', function(req, res, next){
@@ -39,7 +45,7 @@ router.get('/form', function(req, res, next){
 /* POST form new annonce */
 router.post('/form', function(req, res, next){
   db.query('INSERT INTO tb_annonce SET ?', req.body, function(err, rs){
-    res.send('Votre annonce est maintenant publiée!');
+    res.render('new');
   })
 })
 
@@ -75,7 +81,73 @@ router.get('/detail', function(req, res, next) {
   })
 });
 
-/* API = permet qu'un élément d'un logiciel parle à une autre élément 
-   REST API*/
+/* API = permet qu'un élément d'un logiciel parle à une autre élément */
+/* Test API */
+/* app.get('/api', (req, res) => {
+  res.json({
+    success: 1,
+    message: "This is rest apis working"
+  });
+}); */
+
+/* GET API all annonces */
+router.get('/api', (req, res, next) => {
+  db.query('SELECT * FROM tb_annonce', (err, rows, fields) => {
+    if(!err)
+    res.send(rows);
+    else
+    console.log(err)
+  })
+});
+
+
+/* GET API one annonce */
+router.get('/api/:id', (req, res, next) => {
+  db.query('SELECT * FROM tb_annonce WHERE id = ?', [req.params.id],(err, rows, fields) => {
+    if(!err)
+    res.send(rows);
+    else
+    console.log(err)
+  })
+});
+
+/* DELETE API annonce */
+router.delete('/api/:id', (req, res, next) => {
+  db.query('DELETE FROM tb_annonce WHERE id = ?', [req.params.id],(err, rows, fields) => {
+    if(!err)
+    res.send('Deleted successfully');
+    else
+    console.log(err)
+  })
+});
+
+/*UPDATE API annonce*/
+/* router.put('/api', (req, res, next) => {
+  let emp = req.body;
+  var sql = 'SET @id = ?;SET @marque = ?;SET @modele = ?;SET @annee = ?;SET @kilometrage = ?;SET @prix; \
+  CALL UserAddOrEdit(@id,@marque,@modele,@annee,@kilometrage,@prix);';
+  db.query(sql, [emp.id, emp.marque, emp.modele, emp.annee, emp.kilometrage, emp.prix], (err, rows, fields) => {
+    if(!err)
+    res.send('Updated successfully');
+    else
+    console.log(err)
+  })
+}); */
+
+/*ADD API annonce*/
+/* app.post('/adduser', function (req, res) {
+  
+  let id = req.body.id;
+  let marque = req.body.marque;
+console.log(id+" "+marque);
+  if (!id && !marque) {
+      return res.status(400).send({ error:true, message: 'Please provide Information to be add' });
+  }
+
+  db.query("INSERT INTO tb_annonce(id, marque) value(?,?) ", [id,marque], function (error, results, fields) {
+      if (error) throw error;
+      return res.send({ error: false, data: results, message: 'Record has been added' });
+  });
+}); */
 
 module.exports = router;
