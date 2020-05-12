@@ -36,6 +36,11 @@ router.get('/acheter', function(req, res, next){
 });
 
 /* AFFICHER UNE ANNONCE EN PARTICULIER */
+ router.get('/detail', function(req, res, next){
+  db.query('SELECT FROM tb_annonce WHERE id = ?', function(err, rs) {
+    res.render('detail', {acheter: rs}); // res.render = génère un modèle de vue
+  });
+});
 
 /* GET form new annonce */
 router.get('/form', function(req, res, next){
@@ -75,11 +80,11 @@ router.post('/edit', function(req, res, next) {
 })
 
 /* GET update annonce */
-router.get('/detail', function(req, res, next) {
+/* router.get('/detail', function(req, res, next) {
   db.query('SELECT * FROM tb_annonce WHERE id = ?', req.query.id, function(err, rs){
     res.render('form', {acheter: rs[0]});
   })
-});
+}); */
 
 /* API = permet qu'un élément d'un logiciel parle à une autre élément */
 
@@ -139,14 +144,20 @@ console.log(marque+" "+modele+" "+annee+" "+kilometrage+" "+prix);
 });
 
 /* DELETE API annonce */
-router.delete('/api/:id', (req, res, next) => {
-  db.query('DELETE FROM tb_annonce WHERE id = ?', [req.params.id],(err, rows, fields) => {
-    if(!err)
-    res.send('Deleted successfully');
-    else
-    console.log(err)
-  })
-});
+
+
+router.delete('/deleteuser', function (req, res) {
+  
+  let id = req.body.id;
+
+  if (!id) {
+      return res.status(400).send({ error: true, message: 'Please provide id' });
+  }
+  db.query('DELETE FROM tb_annonce WHERE id = ?', [id], function (error, results, fields) {
+      if (error) throw error;
+      return res.send({ error: false, data: results, message: 'User Data has been deleted' });
+  });
+}); 
 
 /* PUT API update annonce */
 router.put('/update', function (req, res) {
