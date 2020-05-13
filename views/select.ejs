@@ -7,6 +7,8 @@
         <td>Marque</td>
         <td>Modèle</td>
         <td>Prix</td>
+        <td>Photo</td>
+
 
     </tr>    
     <% acheter.forEach(function(item) { %>
@@ -14,6 +16,8 @@
         <td><%= item.marque %></td>
         <td><%= item.modele %></td>
         <td><%= item.prix %></td>
+        <td><%= item.photo %></td>
+
         <td>
             <a href="/delete?id=<%= item.id %>" onclick="return confirm('Êtes vous certain de vouloir supprimer cette annonce ?')">Supprimer</a>
             <a href="/edit?id=<%= item.id %>">Modifier</a>

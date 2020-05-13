@@ -43,7 +43,7 @@ router.get('/acheter', function(req, res, next){
 
 /* GET form for new annonce */
 router.get('/form', function(req, res, next){
-  res.render('form', { acheter: {} }); // ?
+  res.render('form', { acheter: {} });
 });
 
 /* POST form for new annonce */
